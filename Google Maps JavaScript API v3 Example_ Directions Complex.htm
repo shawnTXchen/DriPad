@@ -54,10 +54,12 @@ function createMarker(latlng, label, html) {
 function httpGet()
 {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", "http://localhost:4747/hello?direction=\"Turleft\"", false ); // false for synchronous request
+    xmlHttp.open( "GET", "http://localhost:8080/msg?direction=Left", false ); // false for synchronous request
     xmlHttp.send( null );
     return xmlHttp.responseText;
 }
+
+
 
 function initialize() {
   infowindow = new google.maps.InfoWindow(
@@ -74,7 +76,7 @@ function initialize() {
     }
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-    address = 'new york'
+    address = 'philadelphia'
     geocoder = new google.maps.Geocoder();
 	geocoder.geocode( { 'address': address}, function(results, status) {
        map.setCenter(results[0].geometry.location);
@@ -174,7 +176,7 @@ directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
             }
           }
         }
-        console.log("hello");
+        // console.log("hello");
         console.log(polyline.getPath());
         console.log(httpGet())
         polyline.setMap(map);
@@ -256,9 +258,9 @@ function startAnimation() {
 
 <div id="tools">
 	start:
-	<input type="text" name="start" id="start" value="union square, NY">
+	<input type="text" name="start" id="start" value="30th street station, philadelphia, PA">
 	end:
-	<input type="text" name="end" id="end" value="times square, NY">
+	<input type="text" name="end" id="end" value="philadelphia city hall, philadelphia, PA">
 	<input type="submit" onclick="calcRoute();">
 </div>
 
