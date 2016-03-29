@@ -26,6 +26,8 @@ body{height:100%;margin:0px;font-family: Helvetica,Arial;}
   var poly2 = null;
   var speed = 0.000005, wait = 1;
   var infowindow = null;
+  var instr = escape("Turn right on Walnut Street");
+  var url = "http://localhost:8080/msg?direction=" + instr;
   
     var myPano;   
     var panoClient;
@@ -51,10 +53,11 @@ function createMarker(latlng, label, html) {
     return marker;
 }
 
-function httpGet()
+function httpGet(url)
 {
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", "http://localhost:8080/msg?direction=Left", false ); // false for synchronous request
+    // xmlHttp.open( "GET", "http://localhost:8080/msg?direction=Left", false ); // false for synchronous request
+    xmlHttp.open( "GET", url, false );
     xmlHttp.send( null );
     return xmlHttp.responseText;
 }
@@ -178,7 +181,7 @@ directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
         }
         // console.log("hello");
         console.log(polyline.getPath());
-        console.log(httpGet())
+        console.log(httpGet(url))
         polyline.setMap(map);
 
         map.fitBounds(bounds);
