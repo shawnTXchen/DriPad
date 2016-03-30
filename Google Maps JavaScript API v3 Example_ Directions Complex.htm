@@ -224,7 +224,7 @@ function updateStep(d){
         accDistance = accDistance + stepsDistance[curStepInd];
         console.log(accDistance);
         var steptext = stepsIns[curStepInd];
-        var url = "http://localhost:8080/msg?instrucion=" + escape(steptext);
+        var url = "http://localhost:8080/msg?instrucion=" + escape(steptext) + "&speed="+d;
         var curtext =  document.getElementById("step").innerHTML;
         document.getElementById("step").innerHTML = curtext + "<br>" + curStepInd + "<b>Next:</b> "+steptext;
 
