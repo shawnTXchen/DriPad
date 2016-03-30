@@ -77,7 +77,54 @@ def SetMotor(index, value):
 	vybe.write(msg)
 	vybe.flush()
 
+def waveMotor(index, value, T, dutyCycle):
+	dutyCycle = min(max(0, dutyCycle), 1)
 
+	# pull up
+	SetMotor(index, value)
+	time.sleep(T*dutyCycle)
+	# pull down
+	SetMotor(index, 0)
+	time.sleep(T*(1-dutyCycle))
+
+def waveVoicecoil(index, value, T, dutyCycle):
+	dutyCycle = min(max(0, dutyCycle), 1)
+
+	# pull up
+	SetVoicecoil(index, value)
+	time.sleep(T*dutyCycle)
+	# pull down
+	SetVoicecoil(index, 0)
+	time.sleep(T*(1-dutyCycle))
+
+def right(maxValue, T):
+	coils = [3,[1,4],[2,5],6]
+	value = maxValue
+	for i in coils:
+		if type(i) is not list:
+			if i != 6:
+				print i
+				SetVoicecoil(i, value)
+				time.sleep(T/4.)
+				SetVoicecoil(i, 0)
+			else:
+				print i
+				SetMotor(2, int(value*3.0/4))
+				SetMotor(6, int(value*3.0/4))
+				SetVoicecoil(i, value)
+				time.sleep(T/2.)
+				SetMotor(2, 0)
+				SetMotor(6, 0)
+				SetVoicecoil(i, 0)
+
+		else:
+			print i
+			SetVoicecoil(i[0], value)
+			SetVoicecoil(i[1], value)
+			time.sleep(T/4.)
+			SetVoicecoil(i[0], 0)
+			SetVoicecoil(i[1], 0)
+		
 
 #####################################
 #
@@ -85,30 +132,38 @@ def SetMotor(index, value):
 #
 #####################################
 
-buzz_intensity = 255 #can send a value from 0 to 255
-buzz_duration = 1 #second
+for i in xrange(5):
+	right(255, 0.5)
+	time.sleep(0.5)
+
+# for i in xrange(50):
+# 	waveVoicecoil(6,255*(49-i)/49,0.2,0.5)
+# 	print i
+
+# buzz_intensity = 255 #can send a value from 0 to 255
+# buzz_duration = 1 #second
 
 
-#Buzz each voice coil (numbered 1-6)
-for i in range(1,7):
-	SetVoicecoil(i, buzz_intensity)
-	time.sleep(buzz_duration)
-	SetVoicecoil(i, 0)
+# #Buzz each voice coil (numbered 1-6)
+# for i in range(1,7):
+# 	SetVoicecoil(i, buzz_intensity)
+# 	time.sleep(buzz_duration)
+# 	SetVoicecoil(i, 0)
 
 
-#Buzz each rumble motor (numbered 1-6)
-for i in range(1,7):
-	SetMotor(i, buzz_intensity)
-	time.sleep(buzz_duration)
-	SetMotor(i, 0)
+# #Buzz each rumble motor (numbered 1-6)
+# for i in range(1,7):
+# 	SetMotor(i, buzz_intensity)
+# 	time.sleep(buzz_duration)
+# 	SetMotor(i, 0)
 
 
-#Buzz all actuators at once
-for i in range(1,7):
-	SetVoicecoil(i, buzz_intensity)
-	SetMotor(i, buzz_intensity)
-time.sleep(buzz_duration)
-for i in range(1,7):
-	SetVoicecoil(i, 0)
-	SetMotor(i, 0)
+# #Buzz all actuators at once
+# for i in range(1,7):
+# 	SetVoicecoil(i, buzz_intensity)
+# 	SetMotor(i, buzz_intensity)
+# time.sleep(buzz_duration)
+# for i in range(1,7):
+# 	SetVoicecoil(i, 0)
+# 	SetMotor(i, 0)
 
