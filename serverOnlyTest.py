@@ -20,9 +20,13 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         query_components = parse_qs(urlparse(s.path).query)
         instrucion = urllib.unquote(query_components["instrucion"][0])
+        speed = query_components["speed"][0]
 
         print '---instrucion:'
         print instrucion
+
+        print '---speed:'
+        print speed
 
         if 'left' in instrucion:
             print '<== Turn left'

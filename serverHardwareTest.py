@@ -4,6 +4,7 @@ import json
 import serial #Requires PySerial
 import serial.tools.list_ports
 import time
+import urllib
 
 #Load Vybe device details
 vybe_desc = {}
@@ -53,6 +54,66 @@ def SetMotor(index, value):
     vybe.write(msg)
     vybe.flush()
 
+def right(maxValue, T):
+    coils = [3,[1,4],[2,5],6]
+    value = maxValue
+    for i in coils:
+        if type(i) is not list:
+            if i != 6:
+                # print i
+                SetVoicecoil(i, value)
+                time.sleep(T/4.)
+                SetVoicecoil(i, 0)
+            else:
+                # print i
+                SetMotor(2, int(value/2.0))
+                SetMotor(6, int(value/2.0))
+                SetVoicecoil(i, value)
+                time.sleep(T/2.)
+                SetMotor(2, 0)
+                SetMotor(6, 0)
+                SetVoicecoil(i, 0)
+
+        else:
+            # print i
+            SetVoicecoil(i[0], value)
+            SetVoicecoil(i[1], value)
+            time.sleep(T/4.)
+            SetVoicecoil(i[0], 0)
+            SetVoicecoil(i[1], 0)
+
+def left(maxValue, T):
+    coils = [6,[2,5],[1,4],3]
+    value = maxValue
+    for i in coils:
+        if type(i) is not list:
+            if i != 3:
+                # print i
+                SetVoicecoil(i, value)
+                time.sleep(T/4.)
+                SetVoicecoil(i, 0)
+            else:
+                # print i
+                SetMotor(1, int(value/2.0))
+                SetMotor(5, int(value/2.0))
+                SetVoicecoil(i, value)
+                time.sleep(T/2.)
+                SetMotor(1, 0)
+                SetMotor(5, 0)
+                SetVoicecoil(i, 0)
+
+        else:
+            # print i
+            SetVoicecoil(i[0], value)
+            SetVoicecoil(i[1], value)
+            time.sleep(T/4.)
+            SetVoicecoil(i[0], 0)
+            SetVoicecoil(i[1], 0)
+
+def stopPad():
+    for i in range(1,7):
+        SetVoicecoil(i, 0)
+        SetMotor(i, 0)
 
 #####################################
 #
@@ -75,23 +136,26 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(s):
         from urlparse import urlparse, parse_qs
         
-        # print "---Path name: "
-        # print s.path
-
         query_components = parse_qs(urlparse(s.path).query)
-        
-        # print "---Direction: "
-        # print query_components["direction"][0]
-        
-        direction = query_components["direction"] 
-        # name(direction[0])
-        print "---direction:"
-        print direction[0]
+        instrucion = urllib.unquote(query_components["instrucion"][0])
+        speed = query_components["speed"][0]
 
-        if direction[0]=='Left':
-            SetMotor(1, 255)
-            time.sleep(2)
-            SetMotor(1, 0)
+        print '---instrucion:'
+        print instrucion
+
+        print '---speed:'
+        print speed
+
+        # stopPad()
+        if 'left' in instrucion:
+            for i in xrange(2):
+                left(255, 0.5)
+                time.sleep(0.5)
+
+        if 'right' in instrucion:
+            for i in xrange(2):
+                right(255, 0.5)
+                time.sleep(0.5)
 
 
         """Respond to a GET request."""
