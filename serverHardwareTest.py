@@ -54,10 +54,9 @@ def SetMotor(index, value):
     vybe.write(msg)
     vybe.flush()
 
-def right(maxValue, T):
-    coils = [3,[1,4],[2,5],6]
-    value = maxValue
-    for i in coils:
+def turnRight(value, T):
+    idx = [3,[1,4],[2,5],6]
+    for i in idx:
         if type(i) is not list:
             if i != 6:
                 # print i
@@ -82,10 +81,9 @@ def right(maxValue, T):
             SetVoicecoil(i[0], 0)
             SetVoicecoil(i[1], 0)
 
-def left(maxValue, T):
-    coils = [6,[2,5],[1,4],3]
-    value = maxValue
-    for i in coils:
+def turnLeft(value, T):
+    idx = [6,[2,5],[1,4],3]
+    for i in idx:
         if type(i) is not list:
             if i != 3:
                 # print i
@@ -109,6 +107,17 @@ def left(maxValue, T):
             time.sleep(T/4.)
             SetVoicecoil(i[0], 0)
             SetVoicecoil(i[1], 0)
+
+def drowsyAlert(value):
+    idx = [1,2,5,6]
+    for i in idx:
+        SetMotor(i, int(value/2.0))
+    
+    time.sleep(0.1)
+    
+    for i in idx:
+        SetMotor(i, 0)
+
 
 def stopPad():
     for i in range(1,7):
@@ -138,24 +147,46 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         
         query_components = parse_qs(urlparse(s.path).query)
         instrucion = urllib.unquote(query_components["instrucion"][0])
-        speed = query_components["speed"][0]
-
-        print '---instrucion:'
-        print instrucion
-
-        print '---speed:'
-        print speed
+        ahead = int(query_components["ahead"][0])
+        hapIntens = int(query_components["hapIntens"][0])
 
         # stopPad()
+        if 'Drowsy' in instrucion:
+            drowsyAlert(hapIntens)
+
         if 'left' in instrucion:
-            for i in xrange(2):
-                left(255, 0.5)
-                time.sleep(0.5)
+            
+            if 'Turn' in instrucion:
+                if ahead == 1:
+                    turnLeft(int(hapIntens*0.75), 1)
+                else:
+                    for i in xrange(2):
+                        turnLeft(hapIntens, 0.5)
+                        time.sleep(0.5)
+            else:
+                if ahead == 0:
+                    SetMotor(1, hapIntens)
+                    SetMotor(5, hapIntens)
+                    time.sleep(0.2)
+                    SetMotor(1, 0)
+                    SetMotor(5, 0)
 
         if 'right' in instrucion:
-            for i in xrange(2):
-                right(255, 0.5)
-                time.sleep(0.5)
+            
+            if 'Turn' in instrucion:
+                if ahead == 1:
+                    turnRight(int(hapIntens*0.75), 1)
+                else:
+                    for i in xrange(2):
+                        turnRight(hapIntens, 0.5)
+                        time.sleep(0.5)
+            else:
+                if ahead == 0:
+                    SetMotor(2, hapIntens)
+                    SetMotor(6, hapIntens)
+                    time.sleep(0.2)
+                    SetMotor(2, 0)
+                    SetMotor(6, 0)
 
 
         """Respond to a GET request."""
