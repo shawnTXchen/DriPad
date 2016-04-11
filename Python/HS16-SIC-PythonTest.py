@@ -132,38 +132,38 @@ def right(maxValue, T):
 #
 #####################################
 
-for i in xrange(5):
-	right(255, 0.5)
-	time.sleep(0.5)
+# for i in xrange(5):
+# 	right(255, 0.5)
+# 	time.sleep(0.5)
 
 # for i in xrange(50):
 # 	waveVoicecoil(6,255*(49-i)/49,0.2,0.5)
 # 	print i
 
-# buzz_intensity = 255 #can send a value from 0 to 255
-# buzz_duration = 1 #second
+buzz_intensity = 255 #can send a value from 0 to 255
+buzz_duration = 1 #second
 
 
-# #Buzz each voice coil (numbered 1-6)
-# for i in range(1,7):
-# 	SetVoicecoil(i, buzz_intensity)
-# 	time.sleep(buzz_duration)
-# 	SetVoicecoil(i, 0)
+#Buzz each voice coil (numbered 1-6)
+for i in range(1,7):
+	SetVoicecoil(i, buzz_intensity)
+	time.sleep(buzz_duration)
+	SetVoicecoil(i, 0)
 
 
-# #Buzz each rumble motor (numbered 1-6)
-# for i in range(1,7):
-# 	SetMotor(i, buzz_intensity)
-# 	time.sleep(buzz_duration)
-# 	SetMotor(i, 0)
+#Buzz each rumble motor (numbered 1-6)
+for i in range(1,7):
+	SetMotor(i, buzz_intensity)
+	time.sleep(buzz_duration)
+	SetMotor(i, 0)
 
 
-# #Buzz all actuators at once
-# for i in range(1,7):
-# 	SetVoicecoil(i, buzz_intensity)
-# 	SetMotor(i, buzz_intensity)
-# time.sleep(buzz_duration)
-# for i in range(1,7):
-# 	SetVoicecoil(i, 0)
-# 	SetMotor(i, 0)
+#Buzz all actuators at once
+for i in range(1,7):
+	SetVoicecoil(i, buzz_intensity)
+	SetMotor(i, buzz_intensity)
+time.sleep(buzz_duration)
+for i in range(1,7):
+	SetVoicecoil(i, 0)
+	SetMotor(i, 0)
 
